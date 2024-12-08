@@ -1,16 +1,17 @@
 import io
 import textwrap
 
-from src.aoc_2024_one import (
+from aoc_2024_one import (
     to_lines,
     parse_line,
     to_left_right,
     sort_lists,
-    calculate_total_distance_from,
+    total_distance,
 )
+from src.aoc_2024_one import extract_location_lists, similarity_score
 
 
-def test_parse_lines():
+def test_generate_lines():
     list_text = """\
     1234   4567
     8901   2345
@@ -26,7 +27,7 @@ def test_parse_lines():
     )
 
 
-def test_split_lists():
+def test_parse_lines():
     lines = (
         "1234   4567",
         "8901   2345",
@@ -55,12 +56,31 @@ def test_sort_lists():
     assert tuple(sort_lists(iter(unsorted))) == ([1234, 6789, 8901], [1234, 2345, 4567])
 
 
-def test_calculate_total_distance_from_text():
+def test_extract_location_lists():
     list_text = """\
     1234   4567
     8901   2345
     6789   1234
     """
-
     content = io.StringIO(textwrap.dedent(list_text))
-    assert calculate_total_distance_from(content) == 8778
+    assert tuple(extract_location_lists(content)) == (
+        (1234, 8901, 6789),
+        (4567, 2345, 1234),
+    )
+
+
+def test_calculate_total_distance_from_text():
+    lists = (
+        (1234, 8901, 6789),
+        (4567, 2345, 1234),
+    )
+    assert total_distance(iter(lists)) == 8778
+
+
+def test_similarity_score():
+    lists = (
+        (1234, 8901, 6789),
+        (4567, 2345, 1234),
+    )
+
+    assert similarity_score(iter(lists)) == 1234

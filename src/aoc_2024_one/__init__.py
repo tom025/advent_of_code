@@ -1,4 +1,4 @@
-import io
+import itertools
 import pathlib
 import os
 import typing
@@ -29,22 +29,32 @@ def calculate_distances(locations: Iterator[tuple[int, int]]) -> Iterator[int]:
         yield abs(l - r)
 
 
-def calculate_total_distance_from(content: typing.TextIO) -> int:
-    return sum(
-        calculate_distances(
-            zip(
-                *sort_lists(
-                    to_left_right(parse_line(line) for line in to_lines(content))
-                )
-            )
-        )
-    )
+def total_distance(locations: Iterator[Iterable[int]]) -> int:
+    return sum(calculate_distances(zip(*sort_lists(locations))))
 
 
-def total_distance(path: os.PathLike | str) -> int:
+def similarity_score(location_lists: Iterator[Iterable[int]]) -> int:
+    left, right = location_lists
+    duplicate_counts = {
+        l: len(list(dups)) for l, dups in itertools.groupby(sorted(right))
+    }
+    return sum(l * duplicate_counts.get(l, 0) for l in left)
+
+
+def extract_location_lists(content: typing.TextIO) -> Iterator[Iterable[int]]:
+    return to_left_right(parse_line(line) for line in to_lines(content))
+
+
+def calculate_stats(path: os.PathLike | str) -> dict[str, int]:
     with open(path, "r") as f:
-        return calculate_total_distance_from(f)
+        lists_1, lists_2 = itertools.tee(extract_location_lists(f))
+        return {
+            "total_distance": total_distance(lists_1),
+            "similarity_score": similarity_score(lists_2),
+        }
 
 
 if __name__ == "__main__":
-    print(f"total_distance: {total_distance(pathlib.Path('lists.txt'))}")
+    stats = calculate_stats(pathlib.Path("lists.txt"))
+    print(f"total_distance: {stats['total_distance']}")
+    print(f"similarity_score: {stats['similarity_score']}")
