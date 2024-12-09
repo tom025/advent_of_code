@@ -42,7 +42,7 @@ def analyze_reports_file(path: pathlib.Path | str) -> ReportsSummary:
     )
 
 
-def without_idx[T](iter_: collections.abc.Collection, idx: int) -> typing.Collection[T]:
+def remove_level[T](iter_: collections.abc.Collection, idx: int) -> typing.Collection[T]:
     return iter_[0 : idx - len(iter_)] + iter_[idx + 1 : len(iter_)]
 
 
@@ -55,7 +55,7 @@ def is_safe(report: typing.Collection[int], with_dampening: bool = False) -> boo
                 return False
             else:
                 return any(
-                    is_safe(without_idx(report, idx), with_dampening=False) for idx, _ in enumerate(report)
+                    is_safe(remove_level(report, level_idx), with_dampening=False) for level_idx, _ in enumerate(report)
                 )
     return True
 

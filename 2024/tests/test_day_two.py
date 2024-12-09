@@ -8,7 +8,7 @@ from aoc_2024.cmd.day_two import (
     analyze_reports_file,
     parse_report_line,
     is_safe,
-    without_idx,
+    remove_level,
     ReportsSummary,
 )
 
@@ -75,7 +75,7 @@ def test_is_safe_report_with_dampening(report: list[int], expected: bool):
 
 def test_without_idx():
     list_ = [0, 1, 2, 3, 4]
-    assert [without_idx(list_, idx) for idx, _ in enumerate(list_)] == [
+    assert [remove_level(list_, idx) for idx, _ in enumerate(list_)] == [
         [1, 2, 3, 4],
         [0, 2, 3, 4],
         [0, 1, 3, 4],
