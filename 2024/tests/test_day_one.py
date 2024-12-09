@@ -1,30 +1,14 @@
 import io
 import textwrap
 
-from aoc_2024_one import (
-    to_lines,
+from aoc_2024.cmd.day_one import (
     parse_line,
     to_left_right,
     sort_lists,
     total_distance,
+    extract_location_lists,
+    similarity_score,
 )
-from src.aoc_2024_one import extract_location_lists, similarity_score
-
-
-def test_generate_lines():
-    list_text = """\
-    1234   4567
-    8901   2345
-    6789   1234
-    """
-
-    content = io.StringIO(textwrap.dedent(list_text))
-
-    assert tuple(l for l in to_lines(content)) == (
-        "1234   4567",
-        "8901   2345",
-        "6789   1234",
-    )
 
 
 def test_parse_lines():
@@ -34,7 +18,7 @@ def test_parse_lines():
         "6789   1234",
     )
 
-    assert tuple(parse_line(l) for l in lines) == (
+    assert tuple(parse_line(line) for line in lines) == (
         (1234, 4567),
         (8901, 2345),
         (6789, 1234),
