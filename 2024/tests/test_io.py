@@ -20,6 +20,7 @@ def test_generate_lines():
         "6789   1234",
     )
 
+
 def test_read_file_lines(tmp_path: pathlib.Path):
     list_text = """\
     1234   4567
@@ -27,9 +28,8 @@ def test_read_file_lines(tmp_path: pathlib.Path):
     6789   1234
     """
     path = tmp_path.joinpath("lines")
-    with open(path, 'w') as file:
+    with open(path, "w") as file:
         file.write(textwrap.dedent(list_text))
-
 
     assert tuple(aoc_io.read_file_lines(path)) == (
         "1234   4567",
