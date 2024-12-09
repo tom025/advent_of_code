@@ -1,3 +1,4 @@
+import collections.abc
 import itertools
 import pathlib
 import typing
@@ -19,6 +20,7 @@ def sign(n: int) -> Sign:
 @dataclass
 class ReportsSummary:
     safe_count: int
+    safe_with_dampening_count: int
 
 
 def parse_report_line(line: str) -> list[int]:
@@ -31,23 +33,30 @@ def parse_reports(lines: typing.Iterator[str]):
 
 
 def analyze_reports_file(path: pathlib.Path | str) -> ReportsSummary:
-    safe_count = sum(
-        1 for report in parse_reports(read_file_lines(path)) if is_safe(report)
+    reports = list(parse_reports(read_file_lines(path)))
+    return ReportsSummary(
+        safe_count=sum(1 for report in reports if is_safe(report)),
+        safe_with_dampening_count=sum(
+            1 for report in reports if is_safe(report, with_dampening=True)
+        ),
     )
 
-    return ReportsSummary(safe_count=safe_count)
+
+def without_idx[T](iter_: collections.abc.Collection, idx: int) -> typing.Collection[T]:
+    return iter_[0 : idx - len(iter_)] + iter_[idx + 1 : len(iter_)]
 
 
-def is_safe(report: typing.Iterable[int]) -> bool:
+def is_safe(report: typing.Collection[int], with_dampening: bool = False) -> bool:
     diffs = [current - next_ for current, next_ in itertools.pairwise(report)]
     first_sign = sign(diffs[0])
-
-    if first_sign == "zero":
-        return False
-
-    for diff in diffs:
-        if abs(diff) > 3 or sign(diff) != first_sign:
-            return False
+    for idx, diff in enumerate(diffs):
+        if abs(diff) > 3 or sign(diff) != first_sign or first_sign == 'zero':
+            if not with_dampening:
+                return False
+            else:
+                return any(
+                    is_safe(without_idx(report, idx), with_dampening=False) for idx, _ in enumerate(report)
+                )
     return True
 
 
