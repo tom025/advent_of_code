@@ -2,6 +2,7 @@ import collections.abc
 import itertools
 import pathlib
 import typing
+from collections.abc import MutableSequence, Sequence
 from dataclasses import dataclass
 
 from aoc_2024.io import read_file_lines
@@ -42,20 +43,21 @@ def analyze_reports_file(path: pathlib.Path | str) -> ReportsSummary:
     )
 
 
-def remove_level[T](iter_: collections.abc.Collection, idx: int) -> typing.Collection[T]:
-    return iter_[0 : idx - len(iter_)] + iter_[idx + 1 : len(iter_)]
+def remove_level[T](col: Sequence[T], idx: int) -> typing.Collection[T]:
+    return list(itertools.chain(col[0 : idx - len(col)], col[idx + 1 : len(col)]))
 
 
 def is_safe(report: typing.Collection[int], with_dampening: bool = False) -> bool:
     diffs = [current - next_ for current, next_ in itertools.pairwise(report)]
     first_sign = sign(diffs[0])
     for idx, diff in enumerate(diffs):
-        if abs(diff) > 3 or sign(diff) != first_sign or first_sign == 'zero':
+        if abs(diff) > 3 or sign(diff) != first_sign or first_sign == "zero":
             if not with_dampening:
                 return False
             else:
                 return any(
-                    is_safe(remove_level(report, level_idx), with_dampening=False) for level_idx, _ in enumerate(report)
+                    is_safe(remove_level(report, level_idx), with_dampening=False)
+                    for level_idx, _ in enumerate(report)
                 )
     return True
 
