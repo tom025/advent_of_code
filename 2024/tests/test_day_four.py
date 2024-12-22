@@ -1,6 +1,14 @@
 import textwrap
 
-from aoc_2024.cmd.day_four import vectors, match_word, count_matches, word_search
+from aoc_2024.cmd.day_four import (
+    vectors,
+    match_word,
+    count_matches,
+    word_search,
+    x_match,
+    x_word_search,
+    submatrices,
+)
 
 
 def test_get_rows():
@@ -78,3 +86,72 @@ def test_word_search():
     matrix = [list(l) for l in text.splitlines()]
 
     assert word_search(word, matrix) == 18
+
+
+def test_sub_matrices():
+    text = textwrap.dedent("""\
+   .M.S
+   ..A.
+   .M.S
+   ..A.
+   """)
+
+    matrix = [list(l) for l in text.splitlines()]
+
+    assert submatrices(matrix, 3)[0:8] == [
+        [[".", "M"], [".", "."]],
+        [
+            [".", "M", "."],
+            [".", ".", "A"],
+        ],
+        [
+            ["M", ".", "S"],
+            [".", "A", "."],
+        ],
+        [
+            [".", "S"],
+            ["A", "."],
+        ],
+        [
+            [".", "M"],
+            [".", "."],
+            [".", "M"],
+        ],
+        [[".", "M", "."], [".", ".", "A"], [".", "M", "."]],
+        [["M", ".", "S"], [".", "A", "."], ["M", ".", "S"]],
+        [[".", "S"], ["A", "."], [".", "S"]],
+    ]
+
+
+def test_x_match():
+    assert (
+        x_match(
+            [
+                ["M", ".", "S"],
+                [".", "A", "."],
+                ["M", ".", "S"],
+            ],
+            "MAS",
+        )
+        == True
+    )
+    assert x_match([[".", "M"], [".", "."], [".", "M"]], "MAS") == False
+
+
+def test_x_word_search():
+    text = textwrap.dedent("""\
+    .M.S......
+    ..A..MSMS.
+    .M.S.MAA..
+    ..A.ASMSM.
+    .M.S.M....
+    ..........
+    S.S.S.S.S.
+    .A.A.A.A..
+    M.M.M.M.M.
+    ..........
+    """)
+
+    matrix = [list(l) for l in text.splitlines()]
+
+    assert x_word_search(matrix, "MAS") == 9
