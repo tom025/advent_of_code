@@ -6,9 +6,10 @@ import textwrap
 
 from aoc_2024.cmd.day_five import (
     safety_manual_updates,
-    sum_of_correctly_ordered_update_middle_pages,
+    sums,
     is_correctly_ordered,
     middle_page,
+    fix_update,
 )
 
 
@@ -57,9 +58,9 @@ def test_parse_input():
     assert updates[0] == [75, 47, 61, 53, 29]
     assert updates[2] == [75, 29, 13]
 
-    assert (
-        sum_of_correctly_ordered_update_middle_pages(page_order_rules, updates) == 143
-    )
+    sums_ = sums(page_order_rules, updates)
+    assert sums_["sum_of_correctly_ordered_update_middle_pages"] == 143
+    assert sums_["sum_of_fixed_update_middle_pages"] == 123
 
 
 example_page_order_rules = collections.defaultdict(
@@ -86,7 +87,7 @@ example_page_order_rules = collections.defaultdict(
         ([97, 13, 75, 29, 47], False),
     ],
 )
-def test_valid_updates(update, expected):
+def test_is_correctly_ordered(update, expected):
     assert is_correctly_ordered(example_page_order_rules, update) == expected
 
 
@@ -100,3 +101,15 @@ def test_valid_updates(update, expected):
 )
 def test_middle_page(update, expected):
     assert middle_page(update) == expected
+
+
+@pytest.mark.parametrize(
+    ["update", "fixed"],
+    [
+        ([75, 97, 47, 61, 53], [97, 75, 47, 61, 53]),
+        ([61, 13, 29], [61, 29, 13]),
+        ([97, 13, 75, 29, 47], [97, 75, 47, 29, 13]),
+    ],
+)
+def test_fix_update(update, fixed):
+    assert fix_update(example_page_order_rules, update) == fixed
