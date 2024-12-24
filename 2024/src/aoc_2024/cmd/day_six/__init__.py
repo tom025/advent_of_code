@@ -70,14 +70,14 @@ class Map:
             dim=matrix.dim,
             guard_loc=guard_loc,
             guard_direction=guard_direction,
-            guard_location_history=[guard_loc],
+            guard_location_history=[(guard_loc, guard_direction)],
             obstruction_locs=frozenset(obstruction_locs),
         )
 
     dim: Coord
     guard_loc: Coord
     guard_direction: Direction
-    guard_location_history: list[Coord]
+    guard_location_history: list[tuple[Coord, Direction]]
     obstruction_locs: frozenset[Coord]
 
     def __init__(
@@ -85,7 +85,7 @@ class Map:
         dim: Coord,
         guard_loc: Coord,
         guard_direction: Direction,
-        guard_location_history: list[Coord],
+        guard_location_history: list[tuple[Coord, Direction]],
         obstruction_locs: frozenset[Coord],
     ):
         self.dim = dim
@@ -106,7 +106,7 @@ class Map:
             next_direction = turn_clockwise_90(self.guard_direction)
             next_guard_location = move(self.guard_loc, next_direction)
         next_guard_location_history = self.guard_location_history + [
-            next_guard_location
+            (next_guard_location, next_direction)
         ]
 
         new_map = Map(
