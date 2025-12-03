@@ -1,0 +1,19 @@
+[project]
+name = "aoc_2025"
+version = "0.1.0"
+description = "AoC 2025 solutions"
+readme = "README.md"
+authors = [
+    { name = "Tom Brand", email = "tom025@me.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.9.15,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+]

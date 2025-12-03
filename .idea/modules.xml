@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/2024/2024.iml" filepath="$PROJECT_DIR$/2024/2024.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2025/2025.iml" filepath="$PROJECT_DIR$/2025/2025.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/aoc.iml" filepath="$PROJECT_DIR$/.idea/aoc.iml" />
     </modules>
   </component>
