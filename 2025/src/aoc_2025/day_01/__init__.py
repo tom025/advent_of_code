@@ -11,7 +11,13 @@ def parse_rotation(r: str) -> Rotation:
 
 def move_dial(pos: int, rotation: Rotation) -> tuple[int]:
     direction, clicks = rotation
-    return ((pos + clicks if direction == 'R' else pos - clicks) % 100,)
+    match direction:
+        case 'R':
+            _, r = divmod(pos + clicks, 100)
+            return r,
+        case 'L':
+            _, r = divmod(pos - clicks, 100)
+            return r,
 
 
 def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Generator[tuple[int], None, None]:

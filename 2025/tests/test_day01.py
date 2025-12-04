@@ -70,7 +70,23 @@ def test_move_dial(current_position: int, rotation: Rotation, expected: int):
     assert new_pos == expected
 
 
-def test_apply_rotations(example_rotations: list[Rotation]):
+def test_apply_rotations_dial_positions(example_rotations: list[Rotation]):
+    dial_positions: list[int] = list(p for p, in apply_rotations(50, iter(example_rotations)))
+    assert dial_positions == [
+        82,
+        52,
+        0,
+        95,
+        55,
+        0,
+        99,
+        0,
+        14,
+        32
+    ]
+
+@pytest.mark.skip
+def test_apply_rotations_zero_passes(example_rotations: list[Rotation]):
     dial_positions: list[int] = list(p for p, in apply_rotations(50, iter(example_rotations)))
     assert dial_positions == [
         82,
