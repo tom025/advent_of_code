@@ -22,7 +22,6 @@ def example_ranges(example_input):
 def example_invalid_product_ids(example_ranges):
     yield invalid_product_ids_for_ranges(example_ranges)
 
-@pytest.mark.xfail
 def test_day01_example(example_input):
     assert solve(example_input) == 1_227_775_554
 

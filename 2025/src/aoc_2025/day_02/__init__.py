@@ -2,9 +2,6 @@ import collections
 import typing
 
 
-def solve(input: typing.TextIO) -> int:
-    raise NotImplementedError()
-
 
 def parse_range(id_range_text: str):
     start_str, end_str = id_range_text.split('-')
@@ -45,3 +42,13 @@ def sum_invalid_product_ids(range_invalid_ids: collections.abc.Iterator[list[int
     return sum(
         sum(invalid_ids) for invalid_ids in range_invalid_ids
     )
+
+def solve(textio: typing.TextIO) -> int:
+    return sum_invalid_product_ids(invalid_product_ids_for_ranges(parse_ranges(textio)))
+
+
+if __name__ == '__main__':
+    with open('input.txt') as f:
+        result = solve(f)
+
+    print(f"sum of all invalid product ids across ranges: {result!r}")
