@@ -83,6 +83,10 @@ def test_move_dial_positions(current_position: int, rotation: Rotation, expected
         (50, ('L', 51), 1),
         (50, ('L', 150), 1),
         (50, ('L', 151), 2),
+        (0, ('L', 1), 0),
+        (0, ('L', 100), 0),
+        (0, ('L', 101), 1),
+        (0, ('R', 1), 0),
     ]
 )
 def test_move_dial_zero_passes(current_position: int, rotation: Rotation, expected: int):
@@ -91,22 +95,23 @@ def test_move_dial_zero_passes(current_position: int, rotation: Rotation, expect
 
 
 def test_apply_rotations(example_rotations: list[Rotation]):
-    dial_positions: list[int] = list(p for p, _ in apply_rotations(50, iter(example_rotations)))
+    dial_positions: list[tuple[int, int]] = list(apply_rotations(50, iter(example_rotations)))
     assert dial_positions == [
-        82,
-        52,
-        0,
-        95,
-        55,
-        0,
-        99,
-        0,
-        14,
-        32
+        (82, 1),
+        (52, 0),
+        (0, 0),
+        (95, 0),
+        (55, 1),
+        (0, 0),
+        (99, 0),
+        (0, 0),
+        (14, 0),
+        (32, 1)
     ]
 
 
 def test_passwords(example_rotations: list[Rotation]) -> None:
-    password, _ = calculate_passwords(apply_rotations(50, iter(example_rotations)))
+    password, new_security_protocol_password = calculate_passwords(apply_rotations(50, iter(example_rotations)))
     assert password == 3
+    assert new_security_protocol_password == 6
 
