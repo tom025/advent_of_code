@@ -5,7 +5,7 @@ import typing
 
 import pytest
 
-from aoc_2025.day_01 import Rotation, parse_rotation, move_dial, apply_rotations, count_dial_at_zero, parse_rotations, \
+from aoc_2025.day_01 import Rotation, parse_rotation, move_dial, apply_rotations, calculate_passwords, parse_rotations, \
     solve
 
 
@@ -40,7 +40,8 @@ def example_rotations():
     ]
 
 def test_day01_example(example_input: typing.TextIO) -> None:
-    assert solve(example_input) == 3
+    password, _ = solve(example_input)
+    assert password == 3
 
 def test_parse_input(example_input: typing.TextIO, example_rotations) -> None:
     assert list(parse_rotations(example_input)) == example_rotations
@@ -105,6 +106,7 @@ def test_apply_rotations(example_rotations: list[Rotation]):
     ]
 
 
-def test_count_dial_at_zero(example_rotations: list[Rotation]) -> None:
-    assert count_dial_at_zero(apply_rotations(50, iter(example_rotations))) == 3
+def test_passwords(example_rotations: list[Rotation]) -> None:
+    password, _ = calculate_passwords(apply_rotations(50, iter(example_rotations)))
+    assert password == 3
 

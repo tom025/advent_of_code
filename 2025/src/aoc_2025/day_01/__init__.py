@@ -26,8 +26,8 @@ def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Genera
         yield pos, q
 
 
-def count_dial_at_zero(dial_positions: abc.Iterator[tuple[int, int]]) -> int:
-    return sum(1 for p, _ in dial_positions if p == 0)
+def calculate_passwords(dial_positions: abc.Iterator[tuple[int, int]]) -> tuple[int, int]:
+    return sum(1 for p, _ in dial_positions if p == 0), 0
 
 
 def parse_rotations(text: typing.TextIO) -> abc.Generator[Rotation, None, None]:
@@ -35,8 +35,8 @@ def parse_rotations(text: typing.TextIO) -> abc.Generator[Rotation, None, None]:
         yield parse_rotation(line.strip())
 
 
-def solve(text: typing.TextIO) -> int:
-    return count_dial_at_zero(apply_rotations(50, parse_rotations(text)))
+def solve(text: typing.TextIO) -> tuple[int, int]:
+    return calculate_passwords(apply_rotations(50, parse_rotations(text)))
 
 if __name__ == '__main__':
     with open('input.txt') as f:
