@@ -34,3 +34,14 @@ def find_invalid_product_ids(r: range) -> list[int]:
         for product_id in r
         if not is_valid_product_id(product_id)
     )
+
+
+def invalid_product_ids_for_ranges(ranges: collections.abc.Iterable[range]) -> collections.abc.Generator[list[int], None, None]:
+    for r in ranges:
+        yield find_invalid_product_ids(r)
+
+
+def sum_invalid_product_ids(range_invalid_ids: collections.abc.Iterator[list[int]]) -> int:
+    return sum(
+        sum(invalid_ids) for invalid_ids in range_invalid_ids
+    )
