@@ -65,9 +65,28 @@ def test_parse_rotation(rotation_str, expected):
         (52, ('R', 48), 0)
     ]
 )
-def test_move_dial(current_position: int, rotation: Rotation, expected: int):
+def test_move_dial_positions(current_position: int, rotation: Rotation, expected: int):
     new_pos, _ = move_dial(current_position, rotation)
     assert new_pos == expected
+
+@pytest.mark.parametrize(
+    "current_position,rotation,expected",
+    [
+        (50, ('R', 1), 0),
+        (50, ('R', 50), 0),
+        (50, ('R', 51), 1),
+        (50, ('R', 150), 1),
+        (50, ('R', 151), 2),
+        (50, ('L', 1), 0),
+        (50, ('L', 50), 0),
+        (50, ('L', 51), 1),
+        (50, ('L', 150), 1),
+        (50, ('L', 151), 2),
+    ]
+)
+def test_move_dial_zero_passes(current_position: int, rotation: Rotation, expected: int):
+    _, zero_passes = move_dial(current_position, rotation)
+    assert zero_passes == expected
 
 
 def test_apply_rotations(example_rotations: list[Rotation]):
