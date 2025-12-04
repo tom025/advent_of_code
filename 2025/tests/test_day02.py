@@ -23,7 +23,8 @@ def example_invalid_product_ids(example_ranges):
     yield invalid_product_ids_for_ranges(example_ranges)
 
 def test_day01_example(example_input):
-    assert solve(example_input) == 1_227_775_554
+    s1, _ = solve(example_input)
+    assert s1 == 1_227_775_554
 
 
 def test_parse_ranges(example_input):
@@ -69,4 +70,5 @@ def test_find_invalid_product_ids(example_range: range, expected):
 
 
 def test_sum_invalid_product_ids(example_invalid_product_ids):
-    assert sum_invalid_product_ids(example_invalid_product_ids) == 1227775554
+    s1, _ = sum_invalid_product_ids(example_invalid_product_ids)
+    assert s1 == 1227775554
