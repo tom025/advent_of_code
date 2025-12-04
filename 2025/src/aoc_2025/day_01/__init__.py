@@ -9,15 +9,15 @@ def parse_rotation(r: str) -> Rotation:
     return typing.cast(Direction, r[0]), int(r[1:])
 
 
-def move_dial(pos: int, rotation: Rotation) -> int:
+def move_dial(pos: int, rotation: Rotation) -> tuple[int]:
     direction, clicks = rotation
-    return (pos + clicks if direction == 'R' else pos - clicks) % 100
+    return ((pos + clicks if direction == 'R' else pos - clicks) % 100,)
 
 
 def apply_rotations(start: int, rotations: collections.abc.Iterator[Rotation]) -> collections.abc.Generator[int, None, None]:
     pos = start
     for r in rotations:
-        pos = move_dial(pos, r)
+        pos, = move_dial(pos, r)
         yield pos
 
 

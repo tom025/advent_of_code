@@ -66,7 +66,8 @@ def test_parse_rotation(rotation_str, expected):
     ]
 )
 def test_move_dial(current_position: int, rotation: Rotation, expected: int):
-    assert move_dial(current_position, rotation) == expected
+    new_pos, = move_dial(current_position, rotation)
+    assert new_pos == expected
 
 
 def test_apply_rotations(example_rotations: list[Rotation]):
