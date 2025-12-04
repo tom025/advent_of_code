@@ -1,3 +1,5 @@
+import collections
+import itertools
 from collections import abc
 import typing
 
@@ -27,7 +29,16 @@ def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Genera
 
 
 def calculate_passwords(dial_positions: abc.Iterator[tuple[int, int]]) -> tuple[int, int]:
-    return sum(1 for p, _ in dial_positions if p == 0), 0
+    def op(acc: tuple[int, int], d: tuple[int, int]):
+        zero_positions, _ = acc
+        rotation_position, _ = d
+
+        if rotation_position == 0:
+            zero_positions += 1
+
+        return zero_positions, 0
+
+    return collections.deque(itertools.accumulate(dial_positions, op, initial=(0, 0)), maxlen=1).pop()
 
 
 def parse_rotations(text: typing.TextIO) -> abc.Generator[Rotation, None, None]:
