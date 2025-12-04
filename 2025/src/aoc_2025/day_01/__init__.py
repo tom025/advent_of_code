@@ -9,26 +9,26 @@ def parse_rotation(r: str) -> Rotation:
     return typing.cast(Direction, r[0]), int(r[1:])
 
 
-def move_dial(pos: int, rotation: Rotation) -> tuple[int]:
+def move_dial(pos: int, rotation: Rotation) -> tuple[int, int]:
     direction, clicks = rotation
     match direction:
         case 'R':
             _, r = divmod(pos + clicks, 100)
-            return r,
+            return r, 0
         case 'L':
             _, r = divmod(pos - clicks, 100)
-            return r,
+            return r, 0
 
 
-def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Generator[tuple[int], None, None]:
+def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Generator[tuple[int, int], None, None]:
     pos = start
     for r in rotations:
-        pos, = move_dial(pos, r)
-        yield pos,
+        pos, q = move_dial(pos, r)
+        yield pos, q
 
 
-def count_dial_at_zero(dial_positions: abc.Iterator[tuple[int]]) -> int:
-    return sum(1 for p, in dial_positions if p == 0)
+def count_dial_at_zero(dial_positions: abc.Iterator[tuple[int, int]]) -> int:
+    return sum(1 for p, _ in dial_positions if p == 0)
 
 
 def parse_rotations(text: typing.TextIO) -> abc.Generator[Rotation, None, None]:
