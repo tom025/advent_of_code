@@ -26,6 +26,11 @@ def is_valid_product_id(id: int) -> bool:
     return False
 
 def is_valid_product_id_new_rules(id: int) -> bool:
+    id_str = str(id)
+    mid= len(id_str) // 2
+    for batch_size in range(1, mid + 1):
+        if len(set(itertools.batched(id_str, batch_size))) == 1:
+            return False
     return True
 
 

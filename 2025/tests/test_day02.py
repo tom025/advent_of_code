@@ -4,7 +4,7 @@ import textwrap
 import pytest
 
 from aoc_2025.day_02 import solve, parse_ranges, parse_range, is_valid_product_id, find_invalid_product_ids, \
-    invalid_product_ids_for_ranges, sum_invalid_product_ids
+    invalid_product_ids_for_ranges, sum_invalid_product_ids, is_valid_product_id_new_rules
 
 
 @pytest.fixture
@@ -23,8 +23,9 @@ def example_invalid_product_ids(example_ranges):
     yield invalid_product_ids_for_ranges(example_ranges)
 
 def test_day01_example(example_input):
-    s1, _ = solve(example_input)
+    s1, s2 = solve(example_input)
     assert s1 == 1_227_775_554
+    assert s2 == 4_174_379_265
 
 
 def test_parse_ranges(example_input):
@@ -56,6 +57,18 @@ def test_parse_ranges(example_input):
 def test_is_valid_product_id(id, expected):
     assert is_valid_product_id(id) == expected
 
+@pytest.mark.parametrize(
+    "product_id, expected",
+    [
+        (12341234, False),
+        (123123123, False),
+        (1212121212, False),
+        (1111111, False),
+        (101, True)
+    ]
+)
+def test_is_valid_product_id_new_rules(product_id, expected):
+    assert is_valid_product_id_new_rules(product_id) == expected
 
 @pytest.mark.parametrize(
     'example_range, expected',
@@ -70,5 +83,6 @@ def test_find_invalid_product_ids(example_range: range, expected):
 
 
 def test_sum_invalid_product_ids(example_invalid_product_ids):
-    s1, _ = sum_invalid_product_ids(example_invalid_product_ids)
-    assert s1 == 1227775554
+    s1, s2 = sum_invalid_product_ids(example_invalid_product_ids)
+    assert s1 == 1_227_775_554
+    assert s2 == 4_174_379_265
