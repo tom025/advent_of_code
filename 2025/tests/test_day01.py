@@ -71,7 +71,7 @@ def test_move_dial(current_position: int, rotation: Rotation, expected: int):
 
 
 def test_apply_rotations(example_rotations: list[Rotation]):
-    dial_positions: list[int] = list(apply_rotations(50, iter(example_rotations)))
+    dial_positions: list[int] = list(p for p, in apply_rotations(50, iter(example_rotations)))
     assert dial_positions == [
         82,
         52,

@@ -1,4 +1,4 @@
-import collections
+from collections import abc
 import typing
 
 Direction = typing.Literal['L', 'R']
@@ -14,18 +14,18 @@ def move_dial(pos: int, rotation: Rotation) -> tuple[int]:
     return ((pos + clicks if direction == 'R' else pos - clicks) % 100,)
 
 
-def apply_rotations(start: int, rotations: collections.abc.Iterator[Rotation]) -> collections.abc.Generator[int, None, None]:
+def apply_rotations(start: int, rotations: abc.Iterator[Rotation]) -> abc.Generator[tuple[int], None, None]:
     pos = start
     for r in rotations:
         pos, = move_dial(pos, r)
-        yield pos
+        yield pos,
 
 
-def count_dial_at_zero(dial_positions: collections.abc.Iterator[int]) -> int:
-    return sum(1 for p in dial_positions if p == 0)
+def count_dial_at_zero(dial_positions: abc.Iterator[tuple[int]]) -> int:
+    return sum(1 for p, in dial_positions if p == 0)
 
 
-def parse_rotations(text: typing.TextIO) -> collections.abc.Generator[Rotation, None, None]:
+def parse_rotations(text: typing.TextIO) -> abc.Generator[Rotation, None, None]:
     for line in text:
         yield parse_rotation(line.strip())
 
