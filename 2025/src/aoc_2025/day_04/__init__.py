@@ -1,3 +1,5 @@
+import collections.abc
+import copy
 import typing
 
 symbols = typing.Literal['.', '@']
@@ -42,21 +44,13 @@ def all_points(matrix: list[list[typing.Any]]) -> typing.Generator[Point, None, 
         for x in range(len(matrix[0])):
             yield x, y
 
-def matrix_get(matrix: list[list[typing.Any]], p: tuple[int, int]) -> typing.Any:
+def matrix_get(matrix: list[list[typing.Any]], p: Point) -> typing.Any:
     x, y = p
     return matrix[y][x]
 
-def accessible_paper_rolls(matrix: list[list[typing.Any]]) -> typing.Generator[Point, None, None]:
-    for p in all_points(matrix):
-        if matrix_get(matrix, p) == '@' and count_symbol(neighbours(matrix, p), '@') < 4:
-            yield p
-
-def solve(textio: typing.TextIO) -> typing.Tuple[int]:
-    matrix = to_matrix(textio)
-
-    s1 = sum(1 for _ in accessible_paper_rolls(matrix))
-    return s1,
-
+def matrix_set(matrix: list[list[symbols]], p: Point, sym: symbols):
+    x, y = p
+    matrix[y][x] = sym
 
 def count_symbol(ns: list[list[symbols]], symbol: symbols) -> int:
     return sum(
@@ -66,8 +60,37 @@ def count_symbol(ns: list[list[symbols]], symbol: symbols) -> int:
         for row in ns
     )
 
+def accessible_paper_rolls(matrix: list[list[typing.Any]]) -> typing.Generator[Point, None, None]:
+    for p in all_points(matrix):
+        if matrix_get(matrix, p) == '@' and count_symbol(neighbours(matrix, p), '@') < 4:
+            yield p
+
+def remove_paper_rolls(matrix: list[list[symbols]], paper_roll_locations: collections.abc.Iterable[Point]) -> list[list[symbols]]:
+    mc = copy.deepcopy(matrix)
+    for p in paper_roll_locations:
+        matrix_set(mc, p, '.')
+    return mc
+
+def solve(textio: typing.TextIO) -> tuple[int, int]:
+    matrix = to_matrix(textio)
+
+    s1_ = sum(1 for _ in accessible_paper_rolls(matrix))
+
+    s2_ = 0
+    while True:
+        ps = list(accessible_paper_rolls(matrix))
+        if len(ps) == 0:
+            break
+        s2_ += len(ps)
+        matrix = remove_paper_rolls(matrix, ps)
+    return s1_, s2_
+
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
-        s1, = solve(f)
+        s1, s2 = solve(f)
 
     print(f"paper rolls with less than 4 paper rolls as neighbours: {s1!r}")
+    print(f"total rolls removed: {s2!r}")
+

@@ -3,7 +3,8 @@ import textwrap
 
 import pytest
 
-from aoc_2025.day_04 import symbols, to_matrix, neighbours, solve, count_symbol
+from aoc_2025.day_04 import symbols, to_matrix, neighbours, solve, count_symbol, accessible_paper_rolls, \
+    remove_paper_rolls
 
 
 @pytest.fixture
@@ -26,8 +27,9 @@ def example_matrix(example_input):
     yield to_matrix(example_input)
 
 def test_day04_example(example_input):
-    s1, = solve(example_input)
+    s1, s2 = solve(example_input)
     assert s1 == 13
+    assert s2 == 43
 
 
 def test_to_matrix(example_input):
@@ -70,3 +72,18 @@ def test_neighbours(example_matrix, point, expected):
 )
 def test_count_paper_rolls(example_neighbours: list[list[symbols]], expected):
     assert count_symbol(example_neighbours, '@') == expected
+
+
+def test_remove_paper_rolls(example_matrix):
+    assert remove_paper_rolls(example_matrix, accessible_paper_rolls(example_matrix)) == to_matrix(io.StringIO(textwrap.dedent("""\
+    .......@..
+    .@@.@.@.@@
+    @@@@@...@@
+    @.@@@@..@.
+    .@.@@@@.@.
+    .@@@@@@@.@
+    .@.@.@.@@@
+    ..@@@.@@@@
+    .@@@@@@@@.
+    ....@@@...
+    """)))
