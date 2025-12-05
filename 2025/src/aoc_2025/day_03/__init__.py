@@ -11,7 +11,7 @@ def parse_banks(textio: typing.TextIO) -> collections.abc.Generator[list[int], N
         yield to_joltages(line.strip())
 
 
-def max_joltage(bank: list[int]) -> int:
+def max_joltage(bank: list[int], batteries_allowed=2) -> int:
     return max(
         int(str(j) + str(max(bank[i + 1:])))
         for i, j in enumerate(bank)

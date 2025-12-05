@@ -36,16 +36,16 @@ def test_parse_banks(example_input, example_banks):
 
 
 @pytest.mark.parametrize(
-    "bank, expected",
+    "bank, batteries_allowed, expected",
     [
-        (to_joltages('987654321111111'), 98),
-        (to_joltages('811111111111119'), 89),
-        (to_joltages('234234234234278'), 78),
-        (to_joltages('818181911112111'), 92),
+        (to_joltages('987654321111111'), 2, 98),
+        (to_joltages('811111111111119'), 2, 89),
+        (to_joltages('234234234234278'), 2, 78),
+        (to_joltages('818181911112111'), 2, 92),
     ]
 )
-def test_max_joltage(bank, expected):
-    assert max_joltage(bank) == expected
+def test_max_joltage(bank, batteries_allowed, expected):
+    assert max_joltage(bank, batteries_allowed=batteries_allowed) == expected
 
 
 def test_max_joltages(example_banks):
