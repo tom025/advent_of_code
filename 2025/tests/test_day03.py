@@ -27,8 +27,9 @@ def example_banks():
 
 
 def test_day03_example(example_input):
-    solution = solve(example_input)
-    assert solution == 357
+    s1, s2 = solve(example_input)
+    assert s1 == 357
+    assert s2 == 3121910778619
 
 
 def test_parse_banks(example_input, example_banks):
@@ -54,8 +55,8 @@ def test_max_joltage(bank, batteries_allowed, expected):
 
 def test_max_joltages(example_banks):
     assert list(max_joltages(iter(example_banks))) == [
-        98,
-        89,
-        78,
-        92
+        (98, 987654321111),
+        (89, 811111111119),
+        (78, 434234234278),
+        (92,  888911112111),
     ]

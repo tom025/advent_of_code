@@ -1,4 +1,5 @@
 import collections
+import itertools
 import typing
 
 
@@ -32,21 +33,30 @@ def max_joltage(bank: list[int], batteries_allowed: int = 2) -> int:
         max_index, max_value = max_with_index(window)
 
         result += max_value * (10 ** (batteries_allowed - i))
-        window_start = window_start + max_index + 1
+        window_start += max_index + 1
 
     return result
 
 
-def max_joltages(banks: collections.abc.Iterator[list[int]]) -> collections.abc.Generator[int, None, None]:
+def max_joltages(banks: collections.abc.Iterator[list[int]]) -> collections.abc.Generator[tuple[int, int], None, None]:
     for bank in banks:
-        yield max_joltage(bank)
+        yield max_joltage(bank, batteries_allowed=2), max_joltage(bank, batteries_allowed=12)
 
 
-def solve(textio: typing.TextIO) -> int:
-    return sum(max_joltages(parse_banks(textio)))
+def solve(textio: typing.TextIO) -> tuple[int, int]:
+    def pair_sum(acc: tuple[int, int], e: tuple[int, int]) -> tuple[int, int]:
+        return acc[0] + e[0], acc[1] + e[1]
+
+    *_, result = itertools.accumulate(
+        max_joltages(parse_banks(textio)),
+        pair_sum,
+        initial=(0, 0)
+    )
+    return result
 
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
-        solution = solve(f)
+        s1, s2 = solve(f)
 
-    print(f'sum of max joltages: {solution!r}')
+    print(f'sum of max joltages with 2 batteries per bank: {s1!r}')
+    print(f'sum of max joltages with 12 batteries per bank: {s2!r}')
