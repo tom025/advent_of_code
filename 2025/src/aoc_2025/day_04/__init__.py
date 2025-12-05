@@ -34,21 +34,28 @@ def neighbours(matrix: list[list[typing.Any]], point: tuple[int, int]) -> list[l
     return result
 
 
-def all_points(matrix: list[list[typing.Any]]) -> typing.Generator[tuple[int, int], None, None]:
+Point = tuple[int, int]
+
+
+def all_points(matrix: list[list[typing.Any]]) -> typing.Generator[Point, None, None]:
     for y in range(len(matrix)):
         for x in range(len(matrix[0])):
             yield x, y
 
+def matrix_get(matrix: list[list[typing.Any]], p: tuple[int, int]) -> typing.Any:
+    x, y = p
+    return matrix[y][x]
+
+def accessible_paper_rolls(matrix: list[list[typing.Any]]) -> typing.Generator[Point, None, None]:
+    for p in all_points(matrix):
+        if matrix_get(matrix, p) == '@' and count_symbol(neighbours(matrix, p), '@') < 4:
+            yield p
 
 def solve(textio: typing.TextIO) -> typing.Tuple[int]:
     matrix = to_matrix(textio)
 
-    symbol_counts = (
-        count_symbol(neighbours(matrix, (x, y)), '@')
-        for x, y in all_points(matrix)
-        if matrix[y][x] == '@'
-    )
-    return sum(1 for sc in symbol_counts if sc < 4),
+    s1 = sum(1 for _ in accessible_paper_rolls(matrix))
+    return s1,
 
 
 def count_symbol(ns: list[list[symbols]], symbol: symbols) -> int:
