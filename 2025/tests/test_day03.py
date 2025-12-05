@@ -42,7 +42,10 @@ def test_parse_banks(example_input, example_banks):
         (to_joltages('811111111111119'), 2, 89),
         (to_joltages('234234234234278'), 2, 78),
         (to_joltages('818181911112111'), 2, 92),
-        # (to_joltages('987654321111111'), 12, 98),
+        (to_joltages('987654321111111'), 12, 987654321111),
+        (to_joltages('811111111111119'), 12, 811111111119),
+        (to_joltages('234234234234278'), 12, 434234234278),
+        (to_joltages('818181911112111'), 12, 888911112111),
     ]
 )
 def test_max_joltage(bank, batteries_allowed, expected):

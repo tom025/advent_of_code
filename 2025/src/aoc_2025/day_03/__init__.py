@@ -23,11 +23,16 @@ def max_with_index(ints: list[int]) -> tuple[int, int]:
     return max_index, max_value
 
 def max_joltage(bank: list[int], batteries_allowed: int = 2) -> int:
-    max_index, max_value = max_with_index(bank[0:len(bank) - (batteries_allowed - 1)])
-    result = max_value * (10 ** (batteries_allowed - 1))
+    window_start = 0
+    result = 0
+    for i in range(1, batteries_allowed + 1):
+        window_end = len(bank) - (batteries_allowed - i)
+        window = bank[window_start:window_end]
 
-    max_index, max_value = max_with_index(bank[max_index + 1:len(bank) - (batteries_allowed - 2)])
-    result += max_value * (10 ** (batteries_allowed - 2))
+        max_index, max_value = max_with_index(window)
+
+        result += max_value * (10 ** (batteries_allowed - i))
+        window_start = window_start + max_index + 1
 
     return result
 
