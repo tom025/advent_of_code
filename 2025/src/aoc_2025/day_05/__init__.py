@@ -30,14 +30,27 @@ def product_status(id_ranges: set[range], product_id: int) -> ProductSatus:
         return 'fresh'
     return 'spoiled'
 
+def count_all_product_ids(id_ranges: set[range]) -> int:
+    result = 0
+    i = 0
+    for r in sorted(id_ranges, key=lambda r: r.start):
+        if r.stop < i:
+            continue
+        result += r.stop - max(r.start, i)
+        i = r.stop
+    return result
 
-def solve(textio: typing.TextIO) -> tuple[int]:
+def solve(textio: typing.TextIO) -> tuple[int, int]:
     id_ranges, product_ids = read_inventory_db(textio)
     s1_ = sum(1 for pid in product_ids if product_status(id_ranges, pid) == 'fresh')
-    return s1_,
+
+    s2_ = count_all_product_ids(id_ranges)
+
+    return s1_, s2_
 
 if __name__ == '__main__':
     with open('input.txt') as f:
-        s1, = solve(f)
+        s1, s2 = solve(f)
 
     print(f"fresh product count: {s1!r}")
+    print(f"all fresh product ids count: {s2!r}")

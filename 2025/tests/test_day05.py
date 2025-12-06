@@ -3,7 +3,8 @@ import textwrap
 
 import pytest
 
-from aoc_2025.day_05 import ProductInventory, ProductSatus, solve, parse_id_range, read_inventory_db, product_status
+from aoc_2025.day_05 import ProductInventory, ProductSatus, solve, parse_id_range, read_inventory_db, product_status, \
+    count_all_product_ids
 
 
 @pytest.fixture
@@ -28,9 +29,23 @@ def example_inventory(example_input):
 
 
 def test_day05_example(example_input):
-    s1, = solve(example_input)
+    s1, s2 = solve(example_input)
     assert s1 == 3
+    assert s2 == 14
 
+@pytest.mark.parametrize(
+    "id_ranges, expected",
+    [
+        ({parse_id_range('4-8'), parse_id_range('3-5'), parse_id_range('9-12'), parse_id_range('14-15')}, 12),
+        ({parse_id_range('4-10'), parse_id_range('3-5'), parse_id_range('3-11')}, 9),
+        ({parse_id_range('4-10'), parse_id_range('3-5'), parse_id_range('3-10')}, 8),
+        ({parse_id_range('4-10'), parse_id_range('3-5'), parse_id_range('2-11')}, 10),
+        ({parse_id_range('4-10'), parse_id_range('3-5'), parse_id_range('2-11'), parse_id_range('13-14')}, 12),
+        ({parse_id_range('4-10'), parse_id_range('3-5'), parse_id_range('2-11'), parse_id_range('11-12')}, 11),
+    ]
+)
+def test_count_all_product_ids(id_ranges:set[range], expected):
+    assert count_all_product_ids(id_ranges) == expected
 
 def test_id_range():
     r = parse_id_range('3-5')
