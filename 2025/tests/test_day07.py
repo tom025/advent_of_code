@@ -36,7 +36,7 @@ def example_diagram():
     ]
 )
 def test_splitters_on_row(example_diagram, i, expected):
-    _, splitters = parse_diagram(example_diagram)
+    _, splitters, *_ = parse_diagram(example_diagram)
     assert splitters_on_row(splitters, i) == expected
 
 
@@ -46,7 +46,9 @@ def test_day07_example(example_diagram):
 
 
 def test_parse_diagram(example_diagram):
-    source_location, splitter_locations = parse_diagram(example_diagram)
+    source_location, splitter_locations, width, height = parse_diagram(example_diagram)
+    assert width == 15
+    assert height == 16
     assert source_location == (7, 0)
     assert splitter_locations == {
         (1, 14),

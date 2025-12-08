@@ -4,16 +4,19 @@ import typing
 type Point = tuple[int, int]
 
 
-def parse_diagram(textio: typing.TextIO) -> tuple[Point, set[Point]]:
-    source = next((x, 0) for x, c in enumerate(next(textio).strip()) if c == 'S')
-    
-    spliters = set(
-        (x, y + 1) 
-        for y, line in enumerate(textio)
-        for x, c in enumerate(line.strip())
-        if c == '^'
-    )
-    return source, spliters
+def parse_diagram(textio: typing.TextIO) -> tuple[Point, set[Point], int, int]:
+    first_line = next(textio).strip()
+    source = next((x, 0) for x, c in enumerate(first_line) if c == 'S')
+    width = len(first_line)
+    spliters = set()
+    line_count = 1
+    for y, line in enumerate(textio):
+        line_count += 1
+        for x, c in enumerate(line):
+            if c == '^':
+                spliters.add((x, y + 1))
+                
+    return source, spliters, width, line_count
 
 
 def new_beams(current_beams, splitters) -> tuple[set[int], set[int]]:
@@ -33,12 +36,10 @@ def splitters_on_row(splitters: collections.abc.Iterable[Point], i: int) -> set[
     return set(x for x, y in splitters if y == i)
 
 def solve(textio: typing.TextIO) -> tuple[int, int]:
-    source, splitters = parse_diagram(textio)
-    rows = max(y for _, y in splitters)
-
+    source, splitters, width, height = parse_diagram(textio)
     current_beams = {source[0]}
     splitter_hits = set()
-    for r in range(rows + 1):
+    for r in range(height):
         s = splitters_on_row(splitters, r)
         nbs, hits = new_beams(current_beams, s)
         current_beams = nbs
