@@ -19,16 +19,18 @@ def parse_diagram(textio: typing.TextIO) -> tuple[Point, set[Point], int, int]:
     return source, spliters, width, line_count
 
 
-def new_beams(current_beams, splitters) -> tuple[set[int], set[int]]:
-    nbs = set()
+def new_beams(current_beams: dict[int, int], splitters: set[int]) -> tuple[dict[int, int], set[int]]:
     hits = set()
-    for beam in current_beams:
-        if beam in splitters:
-            hits.add(beam)
-            nbs.add(beam - 1)
-            nbs.add(beam + 1)
+    nbs = collections.defaultdict(int, current_beams)
+    for beam_pos, path_count in current_beams.items():
+        if beam_pos in splitters:
+            hits.add(beam_pos)
+            current = current_beams[beam_pos]
+            del nbs[beam_pos]
+            nbs[beam_pos - 1] += current
+            nbs[beam_pos + 1] += current
+            
             continue
-        nbs.add(beam)
     return nbs, hits
 
 
@@ -37,18 +39,20 @@ def splitters_on_row(splitters: collections.abc.Iterable[Point], i: int) -> set[
 
 def solve(textio: typing.TextIO) -> tuple[int, int]:
     source, splitters, width, height = parse_diagram(textio)
-    current_beams = {source[0]}
+    current_beams = collections.defaultdict(int, {
+        source[0]: 1
+    })
     splitter_hits = set()
     for r in range(height):
         s = splitters_on_row(splitters, r)
-        nbs, hits = new_beams(current_beams, s)
-        current_beams = nbs
+        current_beams, hits = new_beams(current_beams, s)
         splitter_hits.update(set((h, r) for h in hits))
 
-    return sum(1 for _ in splitter_hits), 0
+    return sum(1 for _ in splitter_hits), sum(v for v in current_beams.values())
 
 if __name__ == '__main__':
     with open('input.txt') as f:
-        s1, _ = solve(f)
+        s1, s2 = solve(f)
     
     print(f"s1: {s1!r}")
+    print(f"s2: {s2!r}")

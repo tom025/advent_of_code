@@ -41,8 +41,9 @@ def test_splitters_on_row(example_diagram, i, expected):
 
 
 def test_day07_example(example_diagram):
-    s1, _ = solve(example_diagram)
+    s1, s2 = solve(example_diagram)
     assert s1 == 21
+    assert s2 == 40
 
 
 def test_parse_diagram(example_diagram):
@@ -79,11 +80,12 @@ def test_parse_diagram(example_diagram):
 @pytest.mark.parametrize(
     "beams, splitters, expected_new_beams, expected_splitters_hit",
     [
-        ({7}, {}, {7}, set()),
-        ({7}, {6, 8}, {7}, set()),
-        ({7}, {7}, {6, 8}, {7}),
-        ({5, 7, 9}, {5, 7, 9}, {4, 6, 8, 10}, {5, 7, 9}),
-        ({4, 6, 8, 10}, {4, 6, 10}, {3, 5, 7, 8, 9, 11}, {4, 6, 10}),
+        ({7: 1}, set(), {7: 1}, set()),
+        ({7: 1}, {6, 8}, {7: 1}, set()),
+        ({7: 1}, {7}, {6: 1, 8: 1}, {7}),
+        ({5: 1, 7: 1, 9: 1}, {5, 7, 9}, {4: 1, 6: 2, 8: 2, 10: 1}, {5, 7, 9}),
+        ({5: 1, 7: 2, 9: 1}, {5, 7, 9}, {4: 1, 6: 3, 8: 3, 10: 1}, {5, 7, 9}),
+        ({4: 1, 6: 1, 8: 1, 10: 1}, {4, 6, 10}, {3: 1, 5: 2, 7: 1, 8: 1, 9: 1, 11: 1}, {4, 6, 10}),
     ]
 )
 def test_new_beams(beams, splitters, expected_new_beams, expected_splitters_hit):
