@@ -82,8 +82,9 @@ def test_find_all_distances(example_input):
 def test_collect_shortest_circuits(example_input):
     ds = find_all_distances(parse_input(example_input))
 
-    circuits = collect_circuits(ds, 10)
+    circuits, final_connection = collect_circuits(ds, 10)
 
+    assert final_connection is None
     assert {(425, 690, 689), (162, 817, 812), (431, 825, 988)} <= circuits[0]
 
     assert len(circuits) == 4
@@ -92,3 +93,13 @@ def test_collect_shortest_circuits(example_input):
     assert len(largets_circuits[1]) == 4
     assert len(largets_circuits[2]) == 2
     assert len(largets_circuits[3]) == 2
+
+
+def test_collect_shortest_circuits_until_all_connected(example_input):
+    ds = find_all_distances(parse_input(example_input))
+
+    circuits, final_connection = collect_circuits(ds, len(ds))
+
+    assert len(circuits) == 1
+    assert len(circuits[0]) == 20
+    assert final_connection == Connection.from_points((216, 146, 977), (117, 168, 530))

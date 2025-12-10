@@ -46,8 +46,12 @@ def find_all_distances(
 
 def collect_circuits(
     distances: list[tuple[Connection, float]], total_connections: int
-) -> list[set[Point]]:
+) -> tuple[list[set[Point]], Connection | None]:
+    all_points = set()
+    for conn, _ in distances:
+        all_points.update(conn.points)
     circuits: list[set[Point]] = []
+    final_connection = None
     for i in range(total_connections):
         connection, _ = distances[i]
         c_points = connection.points
@@ -66,7 +70,10 @@ def collect_circuits(
             first.update(c)
             circuits.remove(c)
 
-    return circuits
+        if len(circuits) == 1 and len(circuits[0]) == len(all_points):
+            final_connection = connection
+
+    return circuits, final_connection
 
 
 def solve(textio: typing.TextIO, total_connections: int) -> tuple[int, int]:
@@ -76,7 +83,7 @@ def solve(textio: typing.TextIO, total_connections: int) -> tuple[int, int]:
             (
                 len(c)
                 for c in sorted(
-                    collect_circuits(distances, total_connections),
+                    collect_circuits(distances, total_connections)[0],
                     key=len,
                     reverse=True,
                 )
@@ -86,11 +93,16 @@ def solve(textio: typing.TextIO, total_connections: int) -> tuple[int, int]:
         operator.mul,
         initial=1,
     )
-    return s1_, 0
+    _, final_connection = collect_circuits(distances, len(distances))
+    *_, s2_ = itertools.accumulate(
+        (x for x, *_ in final_connection.points), operator.mul, initial=1
+    )
+    return s1_, s2_
 
 
 if __name__ == "__main__":
     with open("input.txt") as f:
-        s1, _ = solve(f, total_connections=1000)
+        s1, s2 = solve(f, total_connections=1000)
 
     print(f"s1: {s1!r}")
+    print(f"s2: {s2!r}")
